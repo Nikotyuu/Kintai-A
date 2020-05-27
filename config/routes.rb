@@ -21,19 +21,14 @@ Rails.application.routes.draw do
       get 'attendances_edit_log'
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
-      get 'edit1_basic_info' #この行が残業申請モーダルウィンドウです
-      patch 'update_basic1_info' #この行が残業申請モーダルウィンドウです
-      get 'edit2_basic_info'
-      patch 'update_basic2_info'
-      get 'edit3_basic_info'
-      patch 'update_basic3_info'
-      get 'edit4_basic_info'
-      patch 'update_basic4_info'
     end
     
-    resources :attendances, only: :update
-  end
-  resources :users do
-    collection {post :import}
+    resources :attendances do
+      member do
+       patch 'update'
+       get 'edit_overtime'
+       patch 'update_overtime'
+      end
     end
+  end
 end
