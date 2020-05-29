@@ -7,14 +7,14 @@
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
-      <h1 class="modal-title">【<%= @user.name %>からの勤怠変更申請】</h1>
+      <h1 class="modal-title">【残業申請】</h1>
     </div>
     <div class="modal-body">
       <div class="row">
-        <div class="col-md-6 col-md-offset-3">
+        <div class="col-md-10 col-md-offset-1">
           <%= form_with(model: @attendance, url: update_overtime_user_attendance_path, local: true, method: :patch) do |f| %>
-         
-          <table class="table table-bordered table-condensed table-hover" id="table-users">
+          
+          <table class="table table-bordered table-condensed table-hover" id="table-attendances">
              <tr>
                <td>日付</td>
                <td>曜日</td>
@@ -26,7 +26,7 @@
              <tr>
                <td><%= l(@attendance.worked_on, format: :short) %></td>
                <td><%= $days_of_the_week[@attendance.worked_on.wday] %></td>
-               <td></td>
+               <td><%=  %></td>
                <td><%= f.check_box :yokuzitu, id: "remember_me" %></td>
                <td><%= f.text_field :processing_content, class: "form-control" %></td>
                <td><%= f.collection_select :instructor_confirmation, User.where(superior: true), :id, :name, :prompt => "上長を選択して下さい" %></td> 
