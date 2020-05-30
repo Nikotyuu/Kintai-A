@@ -21,19 +21,19 @@
 <div>
   <h4>
     <% if current_user.superior? && !current_user?(@users) %>
-      <%= link_to "【所属長承認申請のお知らせ】", "", remote: true, class: "btn1" %>
+      <%= link_to "【所属長承認申請のお知らせ】", edit_approval_user_attendance_path(@user), remote: true, class: "btn1" %>
     <% else %>
       <%= link_to "<user.count>件お知らせがあります。", "", remote: true, class: "btn3" %>
     <% end %>
     </h4>
   <h4>
     <% if current_user.superior? && !current_user?(@users) %>
-      <%= link_to "【勤怠変更申請のお知らせ】", "", remote: true, class: "btn1" %>
+      <%= link_to "【勤怠変更申請のお知らせ】", edit_change_user_attendance_path(@user), remote: true, class: "btn1" %>
     <% end %>  
     </h4>
   <h4>
     <% if current_user.superior? && !current_user?(@users) %>
-      <%= link_to "【残業申請のお知らせ】", "", remote: true, class:"btn1" %>
+      <%= link_to "【残業申請のお知らせ】", edit_request_overtime_user_attendance_path(@user), remote: true, class:"btn1" %>
     <% end %>  
     </h4>
 </div>
@@ -148,3 +148,6 @@
 
 <!--モーダルウインドウ表示-->
 <div id="edit-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit-approval" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit-change" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit-request-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

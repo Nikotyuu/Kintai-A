@@ -89,12 +89,7 @@ class UsersController < ApplicationController
   def edit_basic_info
   end
   
-  def edit4_basic_info
-    @attendance = Attendance.find_by(worked_on: params[:data])
-  end
-  
-  def edit3_basic_info
-  end
+ 
   
 
   def update_basic_info

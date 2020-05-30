@@ -28,6 +28,12 @@ Rails.application.routes.draw do
        patch 'update'
        get 'edit_overtime'
        patch 'update_overtime'
+       get 'edit_approval'
+       patch 'update_approval'
+       get 'edit_change'
+       patch 'update_change'
+       get 'edit_request_overtime'
+       patch 'update_request_overtime'
       end
     end
   end
