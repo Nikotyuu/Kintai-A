@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  month: 2020-05-31
+  decision: MyString
+  authorizer: MyString
+  user: one
+
+two:
+  month: 2020-05-31
+  decision: MyString
+  authorizer: MyString
+  user: two

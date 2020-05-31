@@ -36,5 +36,7 @@ Rails.application.routes.draw do
        patch 'update_request_overtime'
       end
     end
+    
+    resources :approvals, only: :update
   end
 end

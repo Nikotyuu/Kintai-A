@@ -20,21 +20,38 @@
 
 <div>
   <h4>
-    <% if current_user.superior? && !current_user?(@users) %>
-      <%= link_to "【所属長承認申請のお知らせ】", edit_approval_user_attendance_path(@user), remote: true, class: "btn1" %>
+    <% if current_user.superior? %>
+      <% if %>
+        <div>
+          【所属長承認申請のお知らせ】
+           <%= link_to " #{ @count1 }件お知らせがあります。", edit_approval_user_attendance_path(@user), remote: true, :style=>"color:red;" %>
+        </div>
     <% else %>
-      <%= link_to "<user.count>件お知らせがあります。", "", remote: true, class: "btn3" %>
+     <div>
+       【所属長承認申請のお知らせ】
+     </div>
     <% end %>
-    </h4>
-  <h4>
-    <% if current_user.superior? && !current_user?(@users) %>
-      <%= link_to "【勤怠変更申請のお知らせ】", edit_change_user_attendance_path(@user), remote: true, class: "btn1" %>
+    <% if %>
+      <div>
+        【勤怠変更申請のお知らせ】
+         <%= link_to "#{ @count2 }件お知らせがあります。", edit_change_user_attendance_path(@user), remote: true, :style=>"color:red;" %>
+      </div>
+    <% else %>
+     <div>
+       【勤怠変更申請のお知らせ】
+     </div>
     <% end %>  
-    </h4>
-  <h4>
-    <% if current_user.superior? && !current_user?(@users) %>
-      <%= link_to "【残業申請のお知らせ】", edit_request_overtime_user_attendance_path(@user), remote: true, class:"btn1" %>
-    <% end %>  
+    <% if %>
+      <div>
+        【残業申請のお知らせ】
+         <%= link_to "#{ @count3 }件お知らせがあります。", edit_request_overtime_user_attendance_path(@user), remote: true, :style=>"color:red;" %>
+      </div>
+    <% else %>
+      <div>
+        【残業申請のお知らせ】
+      </div>
+    <% end %> 
+    <% end %>
     </h4>
 </div>
 
@@ -133,13 +150,8 @@
         <td></td>
         <td></td>
         <td>
-          <p><%= "所属長承認　未" %></p>
-           <select class="form-control">
-             <option></option>
-             <option>上長A</option>
-             <option>上長B</option>
-           </select>
-          <%= link_to "申請", "", class: "btn btn-primary"  %>
+          <%= form_with (modal: @approval url: user_approval_path(@user) local: true, method: :patch) do |f| %>
+          <%= f.
         </td>
       </tr>
     </tfoot>
