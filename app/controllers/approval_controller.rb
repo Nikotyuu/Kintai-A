@@ -1,2 +1,3 @@
 class ApprovalController < ApplicationController
+    
 end

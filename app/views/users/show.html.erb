@@ -151,7 +151,7 @@
         <td></td>
         <td>
           <%= form_with (modal: @approval url: user_approval_path(@user) local: true, method: :patch) do |f| %>
-          <%= f.
+          <%= f.collection_select(:authorizer, :id, :name, prompt: "") %>
         </td>
       </tr>
     </tfoot>
