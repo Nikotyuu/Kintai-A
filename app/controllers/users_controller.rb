@@ -40,7 +40,7 @@ class UsersController < ApplicationController
 
   def show
     @users = User.all
-    @approval = User(params[:id])
+    @approval = User.where(superior: true)
     respond_to do |format|
       format.html do
           #html用の処理を書く
