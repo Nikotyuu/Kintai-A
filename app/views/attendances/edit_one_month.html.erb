@@ -11,6 +11,7 @@
           <th>退勤</th>
           <th>在社時間</th>
           <th>備考</th>
+          <th>指示者確認㊞</th>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +33,7 @@
                 <% end %>
               </td>
               <td><%= attendance.text_field :note, class: "form-control" %></td>
+              <td><%= f.collection_select :instructor_confirmation, User.where(superior: true), :id, :name, :prompt => "上長を選択して下さい"  %></td>
             </tr>
           <% end %>
         <% end %>

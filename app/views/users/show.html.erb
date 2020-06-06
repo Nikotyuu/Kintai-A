@@ -150,10 +150,6 @@
         <td></td>
         <td></td>
         <td>
-          <%= form_with (modal: @approval url: user_approval_path(@user) local: true, method: :patch) do |f| %>
-          <%= f.collection_select(:authorizer, @approvals, :id, :name, prompt: "申請する上長を選択してください。") %>
-          <%= f.submit "申請", class: "btn btn-primary btn-block" %>
-          <% end %>
         </td>
       </tr>
     </tfoot>
