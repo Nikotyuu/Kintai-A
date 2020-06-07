@@ -7,7 +7,7 @@
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
-      <h1 class="modal-title">【残業申請】</h1>
+      <h1 class="modal-title">【<%= @user.name %>からの1ヶ月分勤怠申請】</h1>
     </div>
     <div class="modal-body">
       <div class="row">
@@ -23,8 +23,8 @@
              </tr>
              <tr>
                <td></td>
-               <td></td>
-               <td></td>
+               <td><%= f.select :decision, Attendance.decisions.keys.to_a %></td>
+               <td><%= f.check_box :yokuzitu, id: "remember_me" %></td>
                <td></td>
           </table>   
             <div class="center">
