@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200531135423) do
+ActiveRecord::Schema.define(version: 20200608141044) do
 
   create_table "approvals", force: :cascade do |t|
     t.date "month"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20200531135423) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "authorizer"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
