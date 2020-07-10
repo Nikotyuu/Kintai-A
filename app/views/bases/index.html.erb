@@ -1,0 +1,32 @@
+<% provide(:title, 'Base-Index') %>
+<% provide(:button_text, '編集') %>
+<h1>拠点一覧</h1>
+<table class="table table-bordered table-condensed base-table">
+  <tr>
+    <td></td>
+    <td></td>
+    <td>拠点番号</td>
+    <td>拠点名</td>
+    <td>勤怠種類</td>
+  </tr>
+  
+  <% @bases.each do |base| %>
+    <tr>
+      <td><%= link_to "編集", edit_basic_info_basis_path(base), remote: true, class: "btn btn-primary" %></td>
+      <td><%= link_to "削除", base, method: :delete, class: "btn btn-primary", data: {confirm: "削除してよろしいですか？" } %></td>
+      <td>
+       <%= base.base_id %>
+      </td>
+      <td>
+       <%= base.name %>
+      </td>
+      <td>
+       <%= base.attendance_sort %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+<%= link_to "拠点情報追加",new_basis_path, class: "btn btn-lg btn-primary" %>
+
+<!--モーダルウインドウ表示-->
+<div id="edit_basic_info" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

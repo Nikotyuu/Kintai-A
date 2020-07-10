@@ -1,48 +1,68 @@
 <% provide(:title, @user.name) %>
 <%= form_with(model: @user, url: attendances_update_one_month_user_path(date: @first_day), local: true, method: :patch) do |f| %>
-  <div>
-    <h1>勤怠編集画面</h1>
-    <table class="table table-bordered table-condensed table-hover" id="table-attendances">
-      <thead>
-        <tr>
-          <th>日付</th>
-          <th>曜日</th>
-          <th>出勤</th>
-          <th>退勤</th>
-          <th>在社時間</th>
-          <th>備考</th>
-          <th>指示者確認㊞</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @attendances.each do |day| %>
-          <%= f.fields_for "attendances[]", day do |attendance| %>
-            <tr>
-              <td><%= l(day.worked_on, format: :short) %></td>
-              <td><%= $days_of_the_week[day.worked_on.wday] %></td>
-              <% if (Date.current < day.worked_on) %>
-                <td><%= attendance.time_field :started_at, readonly: true, class: "form-control" %></td>
-                <td><%= attendance.time_field :finished_at, readonly: true, class: "form-control" %></td>
-              <% else %>
-                <td><%= attendance.time_select :started_at, :include_blank => true, class: "form-control" %></td>
-                <td><%= attendance.time_select :finished_at, :include_blank => true, class: "form-control" %></td>
+<div>
+  <h1>勤怠編集</h1>
+  <table class="table table-bordered table-condensed table-striped table-hover" id="table-attendances">
+    <thead>
+      <tr>
+        <th>日付</th>
+        <th>曜日</th>
+        <th>出社</th>
+        <th>退社</th>
+        <th>翌日</th>
+        <th>在社時間</th>
+        <th>備考</th>
+        <th>指示者確認&#x329E;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @attendances.each do |day| %>
+        <%= f.fields_for "attendances[]", day do |attendance| %>
+          <tr>
+            <td><%= l(day.worked_on, format: :short) %></td>
+            <td>
+              <% if day.worked_on.wday == 0 %>
+                <font color="#ff000">
+              <% elsif day.worked_on.wday == 6 %>
+                <font color="#0033cc">
               <% end %>
-              <td>
-                <% if day.started_at.present? && day.finished_at.present? %>
-                  <%= working_times(day.started_at, day.finished_at) %>
-                <% end %>
-              </td>
-              <td><%= attendance.text_field :note, class: "form-control" %></td>
-              <td><%= f.collection_select :instructor_confirmation, User.where(superior: true), :id, :name, :prompt => "上長を選択して下さい"  %></td>
-            </tr>
-          <% end %>
+              <%= $days_of_the_week[day.worked_on.wday] %>
+            </td>
+            <% if Date.current <= day.worked_on && day.finished_at.blank? %>
+              <td><%= attendance.time_select :changed_started_at, {include_blank: true}, disabled: true, class: "form-control bootstrap-date" %></td>
+              <td><%= attendance.time_select :changed_finished_at, {include_blank: true}, disabled: true, class: "form-control bootstrap-date" %></td>
+            <% else %>
+              <td><%= attendance.time_select :changed_started_at, {include_blank: true}, class: "form-control bootstrap-date" %></td>
+              <td><%= attendance.time_select :changed_finished_at,{include_blank: true}, class: "form-control bootstrap-date" %></td>
+            <% end %>
+            <td><%= attendance.check_box :change_next_day_check %></td>
+            <td>
+              <% if day.changed_started_at.present? && day.changed_finished_at.present? %>
+                <%= format("%.2f", working_times(day.changed_started_at, day.changed_finished_at, day.change_next_day_check)) %>
+              <% end %>
+            </td>
+            <td><%= attendance.text_field :note, placeholder: "入力必須", class: "form-control" %></td>
+            <td>
+              <% if Date.current <= day.worked_on && day.finished_at.blank? %>
+                <%= attendance.collection_select :change_superior_id, @superiors, :id, :name,
+                                                 {include_blank: true, selected: nil}, disabled: true, class: "form-control" %>
+              <% else %>
+                <%= attendance.collection_select :change_superior_id, @superiors, :id, :name,
+                                                   {include_blank: true, selected: nil}, class: "form-control" %>
+              <% end %>
+              <%= attendance.hidden_field :change_status, value: "申請中" %>
+              <%= attendance.hidden_field :change_approval, value: 2 %>
+              <%= attendance.hidden_field :change_check, value: "0" %>
+              <%= attendance.hidden_field :calendar_day, value: day.worked_on.to_date %>
+            </td>
+          </tr>
         <% end %>
-      </tbody>
-    </table>
-  </div>
-
+      <% end %>
+    </tbody>
+  </table>
   <div class="center">
-    <%= f.submit "まとめて更新", class: "btn btn-lg btn-primary" %>
-    <%= link_to "キャンセル", user_path(date: @first_day), class: "btn btn-lg btn-default" %>
+    <%= link_to "キャンセル", user_path(date: @first_day), class: "btn btn-lg btn-primary" %>
+    <%= f.submit "編集を保存する", class: "btn btn-lg btn-primary" %>
   </div>
+</div>
 <% end %>

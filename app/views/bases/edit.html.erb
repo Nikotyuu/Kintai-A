@@ -1,0 +1,22 @@
+<% provide(:title, "Edit") %>
+<h1>ユーザー情報の更新</h1>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_with(model: @user, local: true) do |f| %>
+      <%= render 'shared/error_messages' %>
+      
+      <%= f.label :base_id, class: "label-user--edit" %>
+      <%= f.email_field :base_id, class: "form-control" %>
+
+      <%= f.label :name, class: "label-user--edit" %>
+      <%= f.text_field :name, class: "form-control" %>
+
+      <%= f.label :attendance_sort, class: "label-user--edit" %>
+      <%= f.password_field :attendance_sort, class: "form-control" %>
+
+
+      <%= f.submit "更新", class: "btn btn-primary btn-block btn-user--edit" %>
+    <% end %>
+  </div>
+</div>

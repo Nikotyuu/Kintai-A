@@ -15,29 +15,30 @@ Rails.application.routes.draw do
   resources :users do
     collection { post :import }
     member do
+      get 'attendances/one_month_apply'
+      patch 'attendances/update_one_month_apply'
+      patch 'attendances/confirmation_one_month_apply'
+      get 'attendances/edit_overtime_work_apply'
+      patch 'attendances/update_overtime_work_apply'
+      get 'attendances/recive_overtime_work_apply'
+      patch 'attendances/confirmation_overtime_work_apply'
+      get 'attendances/recive_change_attendance_apply'
+      patch 'attendances/confirmation_change_attendance_apply'
+      get 'attendances/edit_log'
       get 'edit_basic_info'
       patch 'update_basic_info'
-      patch 'update_user_info'
       get 'attendances_edit_log'
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
-      patch 'attendances/update_month'
     end
     
-    resources :attendances do
+    resources :attendances, only: :update
+  end
+    
+    resources :bases do 
       member do
-       patch 'update'
-       get 'edit_overtime'
-       patch 'update_overtime'
-       get 'edit_approval'
-       patch 'update_approval'
-       get 'edit_change'
-       patch 'update_change'
-       get 'edit_request_overtime'
-       patch 'update_request_overtime'
+        get 'edit_basic_info'
+        patch 'update_basic_info'
       end
     end
-    
-    resources :approvals, only: :update
-  end
 end

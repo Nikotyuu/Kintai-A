@@ -1,64 +1,72 @@
-<% provide(:title, 'All Users') %>
-<h1>ユーザー一覧</h1>
+<% provide(:title, "ユーザー一覧") %>
+<% provide(:class_text, "user--edit") %>
+<% provide(:btn_text, "更新") %>
+<h1><%= params[:search].present? ? "検索結果" : "ユーザー一覧" %></h1>
+<h3 class="center"><%= link_to "戻る", users_path if params[:search].present? %></h3>
 
-<% if flash[:notice] %>
-  <div class="alert alert-info" role="alert"><%= flash[:notice] %></div>
-<% end %>
-
-<div class="csv_holder">
-  <%= form_tag import_users_path, multipart: true do %>
-    <%= file_field_tag :file %>
-    <%= submit_tag "CSVインポート", class: "btn btn-primary" %>
-  <% end %>
-</div>
-
-<div class="col-md-10 col-md-offset-1">
-  <div class="row container">
-    <div class="col-md-4 col-md-offset-8">
+<div class="container">
+  <div class="row form-group">
+    
+    <!-- CSVインポートフォーム -->
+    <div class="col-md-4 col-md-offset-1 csv-group">
+      <%= form_tag(import_users_path, method: :post, multipart: true) do %>
+        <%= file_field_tag :csv_file, class: "form-control form-csv" %>
+        <%= submit_tag "CSVをインポート", class: "btn btn-primary btn-block btn-csv" %>
+      <% end %>
+    </div>
+    
+    <!-- ユーザー検索フォーム -->
+    <div class="col-md-2 col-md-offset-2 input-group">
       <p>ユーザー名検索</p>
-      <%= form_tag(users_path, :method => 'get' ) do %>
-        <%= text_field_tag :search %>
-        <%= submit_tag '検索', :name => nil %>
+      <%= form_tag(users_path, method: :get) do %>
+        <span class="input-group-btn">
+          <%= text_field_tag :search, '', placeholder: 'キーワドを入力', class: "form-control"  %>
+          <%= submit_tag '検索', name: :nil, class: "btn btn-primary" %>
+        </span>
       <% end %>
     </div>
   </div>
-</div>
-
-  <%= will_paginate %>
-  <table class="table table-condensed table-hover" id="table-users">
-    <thead>
-      <tr>
-        <th><%= User.human_attribute_name :name %></th>
-        <th class="center"><%= User.human_attribute_name :department %></th>
-        <% if current_user.admin? %>
-          <th class="center"><%= User.human_attribute_name :basic_time %></th>
-          <th class="center"><%= User.human_attribute_name :work_time %></th>
-        <% end %>
-        <th></th>
-      </tr>
-    </thead>
-
+  
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1 paginate-top"><%= will_paginate %></div>
+  </div>
+  
+  <div class="row col-md-10 col-md-offset-1 acd-users">
     <% @users.each do |user| %>
       <div>
-        <p>
-          <div class= "col-md-11 col-md-offset-1">
-          <% if current_user.admin?  && !current_user?(user) %>
-          <%= user.name %><br>
-          <%= link_to "削除", user, method: :delete,
-                                    data: { confirm: "削除してもよろしいですか？" },
-                                    class: "btn btn-primary btn-default" %></br>
-          <div class="panel-group">
-            <div class="panel panel-dafault">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <button type="button" data-taggle="collapse" data-target="#collapse<% user.id %>" class="btn btn-primary btn-lg">編集</button>
-                </h4>
-              </div>
+        <div>
+          <p><%= user.name %></p>
+          <p>| 
+            <% if current_user.admin? && !current_user?(user) %>
+              <%= link_to "削除", user, method: :delete,
+                                  data: { confirm: "#{user.name}を削除してよろしいですか？" },
+                                  class: "btn btn-primary" %>
+            <% end %>
+          </p>
+        </div>
+        
+        <!-- アコーディオン表示 -->
+        <div class="acd jumbotron">
+          <div class="acd-content col-md-2">
+            <a class="btn btn-primary btn-lg btn-edit" data-toggle="collapse" href="#collapse<%= user.id %>" role="button"> <!-- user.idを渡して各ユーザーに紐付け -->
+              編集
+            </a>
           </div>
-          <% end %>
+        </div>
+        <div class="collapse collapse-panel" id="collapse<%= user.id %>"> <!-- user.idを渡して各ユーザーに紐付け -->
+          <div class="collapse-body">
+            <%= render 'form', { user: user } %> <!-- render partial: 'form', locals: { user: user } でも可。 -->
           </div>
-        </p>
+        </div>
       </div>
     <% end %>
-<!--モーダルウインドウ表示-->
-<div id="edit-basic-info" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1 paginate-bottom"><%= will_paginate %></div>
+  </div>
+</div>
+
+<!-- モーダルウィドウ -->
+<div id="edit_basic_info" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit_basic_info" data-toggle="collapse" href="edit_basic_info" role="button" aria-expanded="false" aria-controls="edit_basic_info"></div>
