@@ -24,7 +24,7 @@
       <% @attendances.each do |day| %>
         <% if Date.today.at_end_of_month > day.worked_on %>
           <% @month.each do |month| %>
-            <%= f.submit "#{apply_btn_status(month.status)}", data: { confirm: "申請情報を提出しますか？" }, class: "btn btn-primary btn-block" %>
+            <%= f.submit "#{apply_status(month.status)}", data: { confirm: "申請情報を提出しますか？" }, class: "btn btn-primary btn-block" %>
           <% break %>
         <% end %>
         <% else %>

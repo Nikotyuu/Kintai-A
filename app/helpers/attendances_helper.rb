@@ -1,23 +1,17 @@
 module AttendancesHelper
   
-  def attendance_state(attendance)
+  def attendance_attend(attendance)
     if Date.current == attendance.worked_on
       return '出社' if attendance.started_at.nil?
-      return '退社' if attendance.started_at.present? && attendance.finished_at.nil?
     end
     false
   end
   
-  def working_times(start, finish)
-    format("%.2f", (((finish - start) / 60) / 60.0))
-  end
-  
-  def format_hour(time)
-    format('%2d',((time.hour)))
-  end
-  
-  def format_min(time)
-    format("%.2d",(((time.min) / 15) * 15))
+  def attendance_leave(attendance)
+    if Date.current == attendance.worked_on
+      return '退社' if attendance.started_at.present? && attendance.finished_at.nil?
+    end
+    false
   end
   
   def attendances_invalid?
@@ -49,7 +43,7 @@ module AttendancesHelper
     return attendances
   end
   
-     # 上長選択とtime_selectに任意の値が入力されていない場合の評価
+   # 上長選択とtime_selectに任意の値が入力されていない場合の評価
   def time_select_invalid?(item)
     item[:change_superior_id].present? && item["started_at(4i)"] == "" && item["started_at(5i)"] == "" && item["finished_at(4i)"] == "" && item["finished_at(5i)"] == ""
   end
@@ -100,7 +94,7 @@ module AttendancesHelper
     superior
   end
   
-    # 1ヶ月勤怠申請が自分にきているか
+  # 1ヶ月勤怠申請が自分にきているか
   def has_month_apply
     User.joins(:attendances).where(attendances: {superior_id: current_user.id}).where(attendances: {status: "申請中"})
   end
@@ -148,7 +142,7 @@ module AttendancesHelper
     User.joins(:attendances).where.not(attendances: {overtime_superior_id: nil}).where(attendances: {overtime_approval: 2}).distinct
   end
   
-   def working_times(start, finish, next_day)
+  def working_times(start, finish, next_day)
     if next_day == "1"
       # format("%.2f", (24 - ((start - finish) / 60) / 60.0))
       hour = (24 - start.hour) + finish.hour
@@ -160,7 +154,7 @@ module AttendancesHelper
       min = finish.min - start.min
       @total_time = hour + min / 60.00
     end
-   end
+  end
   
   # 残業申請時間外時間の計算
   def overwotking_times(basic, end_plan)
@@ -194,7 +188,7 @@ module AttendancesHelper
     end
   end
   
-   # 勤怠変更申請中の社員を取得
+  # 勤怠変更申請中の社員を取得
   def change_applying_employee
     User.joins(:attendances).where.not(attendances: {change_superior_id: nil}).
                              where(attendances: {change_approval: 2}).distinct

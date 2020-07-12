@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20200709161636) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "superior"
+    t.integer "superior_id"
     t.string "status"
     t.datetime "month_apply"
     t.integer "month_approval", default: 1
@@ -29,29 +29,29 @@ ActiveRecord::Schema.define(version: 20200709161636) do
     t.datetime "overtime_hours"
     t.integer "change_superior_id"
     t.string "change_status"
-    t.string "chenge_check", default: "0"
+    t.string "change_check", default: "0"
     t.integer "change_approval", default: 1
-    t.string "change_naxt_day_check", default: "0"
+    t.string "change_next_day_check", default: "0"
     t.datetime "changed_started_at"
     t.datetime "changed_finished_at"
     t.datetime "approval_date"
     t.date "calendar_day"
     t.string "superior_name"
     t.string "overtime_superior_name"
-    t.string "chamge_superior_name"
+    t.string "change_superior_name"
     t.integer "overtime_superior_id"
     t.string "overtime_status"
     t.datetime "overtime_end_plan"
     t.string "overtime_check", default: "0"
     t.integer "overtime_approval", default: 1
-    t.string "ovartime_detail"
+    t.string "overtime_detail"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
   create_table "bases", force: :cascade do |t|
     t.string "name"
     t.string "base_id"
-    t.string "attendance"
+    t.string "attendance_sort"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -65,12 +65,12 @@ ActiveRecord::Schema.define(version: 20200709161636) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "department"
-    t.datetime "basic_work_time", default: "2020-07-09 23:00:00"
-    t.datetime "designated_work_start_time", default: "2020-07-09 23:00:00"
-    t.datetime "designated_work_end_time", default: "2020-07-10 09:00:00"
+    t.datetime "basic_work_time", default: "2020-07-11 23:00:00"
+    t.datetime "designated_work_start_time", default: "2020-07-11 23:00:00"
+    t.datetime "designated_work_end_time", default: "2020-07-12 09:00:00"
     t.boolean "superior", default: false
     t.string "affiliation"
-    t.string "employee"
+    t.string "employee_number"
     t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
   end

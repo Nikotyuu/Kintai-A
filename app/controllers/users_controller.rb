@@ -96,17 +96,7 @@ class UsersController < ApplicationController
     end
   end
    
-  def not_admin_user
-     redirect_to root_url if current_user.admin?
-  end   
-     
-   
-  def admin_user
-    if current_user.admin? 
-     flash[:danger] = "管理者には勤怠画面を閲覧できません"
-     redirect_to root_url
-    end 
-  end
+  
    
   def index_attendace
     Attendance.where.not(started_at: nil).each do |attendance|

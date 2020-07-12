@@ -1,5 +1,4 @@
 class AttendancesController < ApplicationController
-  
   before_action :set_user, only: %i(edit_one_month update_one_month update_one_month_apply one_month_apply confirmation_one_month_apply
                                     edit_overtime_work_apply update_overtime_work_apply recive_overtime_work_apply confirmation_overtime_work_apply
                                     recive_change_attendance_apply confirmation_change_attendance_apply edit_log)
@@ -19,18 +18,17 @@ class AttendancesController < ApplicationController
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
   INVALID_MSG = "無効な入力データがあった為、更新をキャンセルしました。"
   
-
   def update
     @user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
     if @attendance.started_at.nil?
-      if @attendance.update_attributes!(started_at: Time.current.change(sec: 0))
+      if @attendance.update_attributes(started_at: Time.current.change(sec: 0), changed_started_at: Time.current.change(sec: 0))
         flash[:info] = "おはようございます！"
       else
         flash[:danger] = UPDATE_ERROR_MSG
       end
     elsif @attendance.finished_at.nil?
-      if @attendance.update_attributes(finished_at: Time.current.change(sec: 0))
+      if @attendance.update_attributes(finished_at: Time.current.change(sec: 0), changed_finished_at: Time.current.change(sec: 0))
         flash[:info] = "お疲れ様でした。"
       else
         flash[:danger] = UPDATE_ERROR_MSG
@@ -39,27 +37,28 @@ class AttendancesController < ApplicationController
     redirect_to @user
   end
   
-  
-
   def edit_one_month
-    @applovals = User.where(superior: true)
+    @superiors = superior_without_me
   end
   
   def update_one_month
     ActiveRecord::Base.transaction do
       if attendances_invalid?
         attendances_params.each do |id, item|
-        attendance = Attendance.find(id)
-        attendance.update_attributes!(item)
-    end
-      flash[:success] =  "#{INVALID_MSG}#{@msg}"
-      redirect_to user_url(date: params[:date])
+          attendance = Attendance.find(id)
+          if item[:change_superior_id].present?
+            attendance.update_attributes!(item)
+            attendance.update_attributes!(change_superior_name: User.find(item[:change_superior_id]).name)
+          end
+        end
+        flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+        redirect_to user_url(date: params[:date])
       else
         flash[:danger] = "#{INVALID_MSG}#{@msg}"
         redirect_to attendances_edit_one_month_user_url(date: params[:date])
       end
     end
-  rescue ActiveRecord::RecordInvalid 
+  rescue ActiveRecord::RecordInvalid
     flash[:danger] = "#{INVALID_MSG}#{@msg}"
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
@@ -87,7 +86,7 @@ class AttendancesController < ApplicationController
     end
   end
   
-    # 1ヶ月の勤怠申請承認
+  # 1ヶ月の勤怠申請承認
   def confirmation_one_month_apply
     confirmation_month_apply_params.each do |id, item|
       if apply_confirmed_invalid?(item[:status], item[:month_check])
@@ -107,7 +106,7 @@ class AttendancesController < ApplicationController
     redirect_back(fallback_location: root_path)
   end
   
-   # 残業申請提出ページ
+  # 残業申請提出ページ
   def edit_overtime_work_apply
     @superiors = superior_without_me
   end
@@ -135,36 +134,12 @@ class AttendancesController < ApplicationController
     end
   end
   
-     # 残業申請確認ページ
+  # 残業申請確認ページ
   def recive_overtime_work_apply
     @users = overtime_applying_employee
   end
   
-  def admin_or_correct_user
-      @user = User.find(params[:user_id]) if @user.blank?
-      unless current_user?(@user) || current_user.admin?
-        flash[:danger] = "編集権限がありません。"
-        redirect_to(root_url)
-      end  
-  end
-    
-   def attendances_invalid?
-    attendances = true
-    attendances_params.each do |id, item|
-      if item[:started_at].blank? && item[:finished_at].blank?
-        next
-      elsif item[:started_at].blank? || item[:finished_at].blank?
-        attendances = false
-        break
-      elsif item[:started_at] > item[:finished_at]
-        attendances = false
-        break
-      end
-    end
-    return attendances
-   end 
-   
-   # 残業申請承認
+  # 残業申請承認
   def confirmation_overtime_work_apply
     confirmation_overtime_work_apply_params.each do |id, item|
       if apply_confirmed_invalid?(item[:overtime_status], item[:overtime_check])
@@ -184,7 +159,7 @@ class AttendancesController < ApplicationController
     redirect_to root_path
   end
   
-    # 勤怠変更確認ページ
+  # 勤怠変更確認ページ
   def recive_change_attendance_apply
     @users = change_applying_employee
   end
@@ -235,7 +210,7 @@ class AttendancesController < ApplicationController
   end
   
   private
-  
+    
     def attendances_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :changed_started_at, :changed_finished_at,
                                                  :note, :change_superior_id, :change_status, :change_check,
@@ -260,7 +235,7 @@ class AttendancesController < ApplicationController
     # 残業申請提出
     def overtime_work_apply_params
       params.require(:user).permit(attendances: [:overtime_superior_id, :overtime_end_plan, :next_day_check, :overtime_detail,
-                                  :overtime_hours, :overtime_approval, :overtime_status, :overtime_check, :overtime_approval ])[:attendances]
+                                  :overtime_hours, :overtime_approval ])[:attendances]
     end
     
     # 残業申請承認
