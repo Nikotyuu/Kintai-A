@@ -232,10 +232,10 @@ class AttendancesController < ApplicationController
       params.permit(attendances: [:status, :month_approval, :month_check])[:attendances]
     end
     
-    # 残業申請提出
+     # 残業申請提出
     def overtime_work_apply_params
       params.require(:user).permit(attendances: [:overtime_superior_id, :overtime_end_plan, :next_day_check, :overtime_detail,
-                                  :overtime_hours, :overtime_approval ])[:attendances]
+                                  :overtime_hours, :overtime_approval, :overtime_status, :overtime_check, :overtime_approval ])[:attendances]
     end
     
     # 残業申請承認

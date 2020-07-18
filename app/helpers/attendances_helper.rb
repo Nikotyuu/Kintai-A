@@ -48,6 +48,7 @@ module AttendancesHelper
     item[:change_superior_id].present? && item["started_at(4i)"] == "" && item["started_at(5i)"] == "" && item["finished_at(4i)"] == "" && item["finished_at(5i)"] == ""
   end
   
+    
   # 本日の勤務中社員取得用
   def working_users
     User.where(id: Attendance.where.not(started_at: nil).
@@ -94,7 +95,7 @@ module AttendancesHelper
     superior
   end
   
-  # 1ヶ月勤怠申請が自分にきているか
+    # 1ヶ月勤怠申請が自分にきているか
   def has_month_apply
     User.joins(:attendances).where(attendances: {superior_id: current_user.id}).where(attendances: {status: "申請中"})
   end
@@ -113,13 +114,14 @@ module AttendancesHelper
   def apply_status(status)
     case status
     when "申請中"
-      "に申請中"
+      "申請中"
     when "承認"
-      "から承認済"
+      "承認済"
     when "否認"
-      "から否認"
+      "否認"
     else
-      "未"
+      
+      "申請"
     end
   end
   

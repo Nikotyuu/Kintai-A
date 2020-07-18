@@ -1,7 +1,7 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
-/* universal */
+/* 共通 */
 
 body {
   padding-top: 60px;
@@ -23,7 +23,23 @@ textarea {
   margin-bottom: 10px;
 }
 
-/* typography */
+.btn-left {
+  text-align: left;
+}
+
+.bootstrap-date {
+  display: inline-block;
+  width: 5em;
+}
+
+.close {
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+}
+
+/* タイポグラフィ */
 
 h1, h2, h3, h4, h5, h6 {
   line-height: 1;
@@ -50,7 +66,7 @@ p {
   line-height: 1.7em;
 }
 
-/* header */
+/* ヘッダー */
 
 #logo {
   float: left;
@@ -68,19 +84,217 @@ p {
   text-decoration: none;
 }
 
-/* debug */
+/* ユーザー情報テーブル */
+
+#user-table {
+  vertical-align: middle;
+  text-align: center;
+  thead td {
+    vertical-align: bottom;
+    border-bottom: 3px double #ccc;
+  }
+}
+
+.btn-user-table {
+  margin: 30px 0 10px 0;
+}
+
+.btn-edit {
+  margin: -20px 0 0 -65px;
+}
+
+/* ユーザー勤怠情報テーブル */
+
+#table-attendances {
+  th {
+    vertical-align: middle;
+    text-align: center;
+  }
+  td {
+    vertical-align: middle;
+    text-align: center;
+  }
+}
+
+/* 勤怠変更ログページ */
+
+.search-group {
+  margin: 0 0 10px -15px;
+}
+
+.search-btn {
+  margin-left: -10px;
+}
+
+/* 上長勤怠情報テーブル */
+
+.news p {
+  line-height: 0.8em;
+  padding-bottom: 2px;
+}
+
+.application-form {
+  .btn {
+    margin-top: 10px;
+  }
+}
+
+.notice-superior {
+  border: solid 2px #ff0000;
+  color: #ff0000;
+  font-weight: bold;
+}
+
+.notice-superior:hover {
+  border: solid 2px #f96250;
+  color: #f96250;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* ユーザー登録・編集フォーム */
+
+.label-signup {
+  margin-top: 5px;
+}
+
+.btn-signup {
+  margin-top: 10px;
+}
+
+.label-user--edit {
+  margin-top: 5px;
+}
+
+.btn-user--edit {
+  margin-top: 10px;
+}
+
+/* ログインフォーム */
+
+.label-login {
+  margin-top: 5px;
+}
+
+.btn-login {
+  margin-top: 10px;
+}
+
+.checkbox-login {
+  width: auto;
+  margin-left: 25px;
+  span {
+    font-weight: normal;
+  }
+}
+
+/* ユーザー一覧ページ */
+
+#table-users {
+  td {
+    vertical-align: middle;
+  }
+}
+
+.input-group {
+  margin: 20px 0 0 15px;
+  p {
+    margin-bottom: 10px;
+  }
+}
+
+.csv-group {
+  margin-right: 25%;
+}
+
+.btn-csv {
+  margin-top: 10px;
+}
+
+.paginate-top {
+  margin-bottom: -30px;
+}
+.paginate-bottom {
+  margin-top: -30px;
+}
+
+.acd-users {
+  margin-top: 20px;
+}
+
+.collapse-body {
+  margin-bottom: 50px;
+}
+
+/* 出勤社員一覧ページ */
+
+#attend-table {
+  vertical-align: middle;
+  text-align: center;
+  font-weight: bold;
+  thead td {
+    vertical-align: bottom;
+    border-bottom: 3px double #ccc;
+  }
+}
+
+/* 拠点一覧ページ */
+
+#offices-table {
+  vertical-align: middle;
+  text-align: center;
+  thead td {
+    vertical-align: bottom;
+    border-bottom: 3px double #ccc;
+  }
+}
+
+.label-office--edit {
+  margin-top: 5px;
+}
+
+.btn-office--edit {
+  margin-top: 10px;
+}
+
+.btn-office-new {
+  margin: -20px 0 0 -65px;
+}
+
+.collapse-edit {
+  text-align: left;
+}
+
+/* モーダルウィンドウ位置調整 */
+
+.modal-dialog-center {
+  padding-top: 10%;
+}
+
+/* 基本情報編集モーダルウィンドウ */
+
+.label-basic-info {
+  margin-top: 5px;
+}
+
+.btn-basic-info {
+  margin: 15px 0;
+  width: 30%;
+}
+
+/* デバッグ情報 */
 
 .debug_dump {
   clear: both;
   float: left;
   width: 100%;
   margin-top: 45px;
-  -moz-box-sizing:    border-box;
+  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing:         border-box;
+  box-sizing: border-box;
 }
 
-/* error_messages */
+/* エラーメッセージ */
 
 #error_explanation {
   color: red;
@@ -95,44 +309,4 @@ p {
   .form-control {
     color: $state-danger-text;
   }
-}
-
-/* モーダルウインドウの位置調整 */
-
-.modal-dialog-center {
-  padding-top: 10%;
-}
-
-/* 基本情報編集モーダルウインドウ */
-
-.label-basic-info {
-  margin-top: 5px;
-}
-
-.btn-basic-info {
-  margin: 15px 0;
-  width: 30%;
-}
-
-/*テキスト色変更*/
-
-.btn1 {
-  color: #000;
-}
-
-.btn1:hover {
-  color: #c0c0c0;
-  text-decoration: none;
-}
-
-.btn2 {
-  background-color: #00f;
-  color: #fff;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-}
-
-.btn3{
-  color: #f00;
 }

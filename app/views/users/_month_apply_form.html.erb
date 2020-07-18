@@ -5,9 +5,9 @@
         <% @month.each do |month| %>
           <%= fields_for "attendances[]", month do |m| %>
             <% if month.status.blank? %>
-              <%= "所属長承認　#{apply_status(month.status)}" %>
+              <%= "所属長承認　未" %>
             <% else %>
-              <%= "所属長承認　#{month.superior_name}#{apply_status(month.status)}" %>
+              <%= "所属長承認　#{month.superior_name}から#{apply_status(month.status)}" %>
             <% end %>
             <%= m.collection_select :superior_id, @superiors, :id, :name, {include_blank: true, selected: nil}, {class: "form-control"} %>
             <%= m.hidden_field :status, value: "申請中" %>
