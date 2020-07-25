@@ -5,6 +5,7 @@
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <%= form_with(model: @base, local: true) do |f| %>
+    <%= render "shared/error_messages", object: @base %>
     
     <%= f.label :name, class: "label-#{yield(:class_text)}" %>
     <%= f.text_field :name, class: "form-control" %>
@@ -14,8 +15,7 @@
     
     <%= f.label :attendance_sort, class: "label-#{yield(:class_text)}" %></br>
     <%= f.select :attendance_sort, 
-        {選択してください: "選択してください",
-        出勤: "出勤",
+        {出勤: "出勤",
         退勤: "退勤" } %>
     
     <%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %>

@@ -17,7 +17,8 @@ class BasesController < ApplicationController
       flash[:success] = "拠点の更新に成功しました。"
       redirect_to bases_url
     else
-      render :bases
+      flash[:danger] = "拠点番号または拠点名が空のため更新できませんでした。"
+      redirect_to bases_url
     end 
   end
   

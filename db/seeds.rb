@@ -18,3 +18,8 @@ User.create!(name: "上長B",
              password_confirmation: "password",
              superior: true)
 
+User.create!(name: "テスト",
+             email: "sample1@email.com",
+             password: "password",
+             password_confirmation: "password"
+             )
