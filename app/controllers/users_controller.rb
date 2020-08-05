@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i(show edit update destroy edit_basic_info)
   before_action :logged_in_user, only: %i(index show edit update destroy edit_basic_info import)
-  before_action :admin_user, only: %i(index destroy edit_basic_info)
+  before_action :admin_user, only: %i(index destroy edit_basic_info index_attendace)
   before_action :correct_or_superior_user, only: %i(show)
   before_action :admin_exclusion, only: %i(show)
   before_action :set_one_month, only: %i(show)
@@ -95,8 +95,7 @@ class UsersController < ApplicationController
       redirect_to users_url
     end
   end
-   
-  
+
    
   def index_attendace
     Attendance.where.not(started_at: nil).each do |attendance|
@@ -116,5 +115,6 @@ class UsersController < ApplicationController
     def basic_info_params
       params.require(:user).permit(:affiliation, :basic_work_time, :work_time)
     end
+    
     
 end

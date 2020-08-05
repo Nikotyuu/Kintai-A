@@ -20,4 +20,15 @@ class Attendance < ApplicationRecord
     end
   end
   
+  def self.search(search)
+    return Attendance.all unless search
+    # 開発環境
+    if Rails.env.development? || Rails.env.test?
+      Attendance.where(['worked_on LIKE ?', "%#{search}%"])
+    else Rails.env.production?
+      # 本番環境
+      Attendance.where(['worked_on::text LIKE ?', "%#{search}%"])
+    end
+  end
+  
 end

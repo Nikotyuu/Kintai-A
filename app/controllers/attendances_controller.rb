@@ -63,8 +63,17 @@ class AttendancesController < ApplicationController
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
   
+  
   def one_month_apply
     @users = month_applying_employee # 1ヶ月勤怠申請中の社員を@usersに代入
+  end
+  
+  def attendances_changed_stared_at
+     @attendance.update_attributes(changed_started_at: Time.current.change(sec: 0))
+  end
+  
+  def attendances_changed_finished_at
+    @attendance.update_attributes(changed_finished_at: Time.current.change(sec: 0))
   end
   
   # 1ヶ月の勤怠申請提出
@@ -203,6 +212,19 @@ class AttendancesController < ApplicationController
     else
       search_years = ActiveSupport::HashWithIndifferentAccess.new(worked_on: params[:search]["worked_on(1i)"])
       search_months = ActiveSupport::HashWithIndifferentAccess.new(worked_on: params[:search]["worked_on(2i)"])
+      @search_year = search_years[:worked_on]
+      @search_month = search_months[:worked_on]
+      Attendance.where(user_id: @user.id).search(params[:search]["worked_on(1i)"]).search(params[:search]["worked_on(2i)"]).where(change_approval: 3).order(worked_on: "ASC")
+    end
+  end
+  
+  def edit_change_log
+    @logs =
+    if params[:search].blank?
+      Attendance.where(user_id: @user.id).where(worked_on: @first_day..@last_day).where(change_approval: 3).order(worked_on: "ASC")
+    else
+      search_years = ActiveSupport::HashWithIndifferentAccess.not_new(worked_on: params[:search]["worked_on(1i)"])
+      search_months = ActiveSupport::HashWithIndifferentAccess.not_new(worked_on: params[:search]["worked_on(2i)"])
       @search_year = search_years[:worked_on]
       @search_month = search_months[:worked_on]
       Attendance.where(user_id: @user.id).search(params[:search]["worked_on(1i)"]).search(params[:search]["worked_on(2i)"]).where(change_approval: 3).order(worked_on: "ASC")

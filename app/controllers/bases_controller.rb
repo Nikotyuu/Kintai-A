@@ -1,7 +1,7 @@
 class BasesController < ApplicationController
   before_action :set_user, only: [ :update, :destroy, :edit_basic_info, :update_basic_info]
-  #before_action :correct_user, only: [ :update]
- 
+  #before_action :correct_user, only: :update
+  before_action :admin_user
   
   def index
     @bases = Base.all
@@ -50,6 +50,8 @@ class BasesController < ApplicationController
     redirect_to bases_url
   end
   
+  
+  
   private
   
   def base_params
@@ -63,4 +65,7 @@ class BasesController < ApplicationController
   def correct_user
     redirect_to(root_url) unless current_user?(@base)
   end
+  
+
+  
 end

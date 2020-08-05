@@ -22,7 +22,7 @@ module AttendancesHelper
       elsif item[:change_superior_id].present? && item[:note].blank?
         attendances = false
         if item[:note].blank?
-          @msg = "備考を入力してください。"
+          @msg = "備考を入力してくれ。"
         end
         break
       elsif item[:change_superior_id].present? && item[:note].present? && item['changed_started_at(4i)'] == "" && item['changed_started_at(5i)'] == "" && item['changed_finished_at(4i)'] == "" && item['changed_finished_at(5i)'] == ""
@@ -102,7 +102,7 @@ module AttendancesHelper
   
   # 勤怠申請決裁の変更のチェックが入っているか？
   def apply_confirmed_invalid?(status, check)
-    if (status == "承認" || status == "否認")  && check == "1"
+    if (status == "承認" || status == "否認" || status == "なし" )  && check == "1"
       confirmed = true
     else
       confirmed = false
@@ -114,13 +114,12 @@ module AttendancesHelper
   def apply_status(status)
     case status
     when "申請中"
-      "申請中"
+      "申請中だ、少々待ってくれ。"
     when "承認"
-      "承認済"
+      "から承認済になったぞ、良かったな。"
     when "否認"
-      "否認"
+      "から否認されたぞ、何かやったか？"
     else
-      
       "申請"
     end
   end
@@ -181,12 +180,14 @@ module AttendancesHelper
   def overtime_status_text(status)
     case status
     when "申請中"
-      "　残業申請中"
+      "に残業申請中だ、少々待ってくれ。"
     when "否認"
-      "　残業否認"
+      "から残業否認されたぞ、今はゆっくり休んでくれ。"
     when "承認"
-      "　残業承認"
-    else
+      "から残業承認されたぞ、もうひと踏ん張り頑張ろう。"
+    when "なし"
+      "から残業申請がキャンセルされたぞ。"
+    else 
     end
   end
   
@@ -205,12 +206,13 @@ module AttendancesHelper
   def change_status_text(status)
     case status
     when "申請中"
-      "　勤怠編集申請中"
+      "に勤怠編集申請中だ、少々待ってくれ。"
     when "否認"
-      "　勤怠編集否認"
+      "から勤怠編集否認されたぞ、何か仕出かしたか？"
     when "承認"
-      "　勤怠編集承認"
+      "から勤怠編集承認されたぞ、良かったな。"
     when "なし"
+      "から勤怠編集申請がキャンセルされたぞ。"
     else
     end
   end
