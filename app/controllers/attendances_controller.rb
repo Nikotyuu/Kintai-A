@@ -15,21 +15,21 @@ class AttendancesController < ApplicationController
                                         recive_change_attendance_apply confirmation_change_attendance_apply edit_log)
   before_action :set_one_month_apply, only: %i(update_one_month_apply)
   
-  UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
-  INVALID_MSG = "無効な入力データがあった為、更新をキャンセルしました。"
+  UPDATE_ERROR_MSG = "勤怠登録に失敗されたぞ。やり直してくれ。"
+  INVALID_MSG = "無効な入力データがあったようだ、更新をキャンセルしたぞ。"
   
   def update
     @user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
     if @attendance.started_at.nil?
       if @attendance.update_attributes(started_at: Time.current.change(sec: 0), changed_started_at: Time.current.change(sec: 0))
-        flash[:info] = "おはようございます！"
+        flash[:info] = "おはよう、今日も頑張ろうか。"
       else
         flash[:danger] = UPDATE_ERROR_MSG
       end
     elsif @attendance.finished_at.nil?
       if @attendance.update_attributes(finished_at: Time.current.change(sec: 0), changed_finished_at: Time.current.change(sec: 0))
-        flash[:info] = "お疲れ様でした。"
+        flash[:info] = "お疲れさま、ゆっくり休んでくれ。"
       else
         flash[:danger] = UPDATE_ERROR_MSG
       end
@@ -41,7 +41,7 @@ class AttendancesController < ApplicationController
     @superiors = superior_without_me
   end
   
-  def update_one_month
+   def update_one_month
     ActiveRecord::Base.transaction do
       if attendances_invalid?
         attendances_params.each do |id, item|
@@ -63,17 +63,8 @@ class AttendancesController < ApplicationController
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
   
-  
   def one_month_apply
     @users = month_applying_employee # 1ヶ月勤怠申請中の社員を@usersに代入
-  end
-  
-  def attendances_changed_stared_at
-     @attendance.update_attributes(changed_started_at: Time.current.change(sec: 0))
-  end
-  
-  def attendances_changed_finished_at
-    @attendance.update_attributes(changed_finished_at: Time.current.change(sec: 0))
   end
   
   # 1ヶ月の勤怠申請提出
@@ -87,15 +78,15 @@ class AttendancesController < ApplicationController
         @month_apply = item[:month_apply].to_date.strftime("%-m")
         @superior = item[:superior_name]
       end
-      flash[:success] = "#{@user.name}の#{@month_apply}月分勤怠申請を、#{@superior}へ提出しました。"
+      flash[:success] = "#{@user.name}の#{@month_apply}月分勤怠申請を、#{@superior}に提出しました。"
       redirect_to user_url(date: params[:date])
     else
-      flash[:danger] = "申請先の上長を選択してください。"
+      flash[:danger] = "上長を選択してください。"
       redirect_to user_url(date: params[:date])
     end
   end
   
-  # 1ヶ月の勤怠申請承認
+    # 1ヶ月の勤怠申請承認
   def confirmation_one_month_apply
     confirmation_month_apply_params.each do |id, item|
       if apply_confirmed_invalid?(item[:status], item[:month_check])
@@ -108,10 +99,10 @@ class AttendancesController < ApplicationController
         end
       end
     end
-    flash[:success] = "1ヶ月勤怠申請の決裁を更新しました。"
+    flash[:success] = "1ヶ月勤怠申請を更新しました。"
     redirect_back(fallback_location: root_path) # 申請月のページにリダイレクト、エラーが出る前にroot_pathにとんでくれる。
   rescue ActiveRecord::RecordInvalid
-    flash[:danger] = "エラーが発生した為、1ヶ月勤怠申請の更新がキャンセルされました。"
+    flash[:danger] = "1ヶ月勤怠申請の更新がキャンセルされました。"
     redirect_back(fallback_location: root_path)
   end
   
@@ -135,7 +126,7 @@ class AttendancesController < ApplicationController
         flash[:success] = "#{attendance.overtime_superior_name}に残業申請を提出しました。"
         redirect_back(fallback_location: root_path)
       else
-        msg_a = "申請先上長を選択してください。" if item[:overtime_superior_id].blank?
+        msg_a = "上長を選択してください。" if item[:overtime_superior_id].blank?
         msg_b = "業務処理内容を入力してください。" if item[:overtime_detail].blank?
         flash[:danger] = "#{msg_a}#{msg_b}"
         redirect_back(fallback_location: root_path)
@@ -161,10 +152,10 @@ class AttendancesController < ApplicationController
         end
       end
     end
-    flash[:success] = "残業申請の決裁を更新しました。"
+    flash[:success] = "残業申請を更新しました。"
     redirect_to @user
   rescue ActiveRecord::RecordInvalid
-    flash[:danger] = "エラーが発生した為、残業申請の更新がキャンセルされました。"
+    flash[:danger] = "残業申請の更新がキャンセルされました。"
     redirect_to root_path
   end
   
@@ -189,11 +180,11 @@ class AttendancesController < ApplicationController
           end
         end
       end
-      flash[:success] = "勤怠変更の決裁を更新しました。"
+      flash[:success] = "勤怠変更を更新しました。"
       redirect_to user_url(date: params[:date])
     end
   rescue ActiveRecord::RecordInvalid
-    flash[:danger] = "エラーが発生した為、勤怠変更の更新がキャンセルされました。"
+    flash[:danger] = "勤怠変更の更新がキャンセルされました。"
     redirect_to root_path
   end
   
@@ -212,19 +203,6 @@ class AttendancesController < ApplicationController
     else
       search_years = ActiveSupport::HashWithIndifferentAccess.new(worked_on: params[:search]["worked_on(1i)"])
       search_months = ActiveSupport::HashWithIndifferentAccess.new(worked_on: params[:search]["worked_on(2i)"])
-      @search_year = search_years[:worked_on]
-      @search_month = search_months[:worked_on]
-      Attendance.where(user_id: @user.id).search(params[:search]["worked_on(1i)"]).search(params[:search]["worked_on(2i)"]).where(change_approval: 3).order(worked_on: "ASC")
-    end
-  end
-  
-  def edit_change_log
-    @logs =
-    if params[:search].blank?
-      Attendance.where(user_id: @user.id).where(worked_on: @first_day..@last_day).where(change_approval: 3).order(worked_on: "ASC")
-    else
-      search_years = ActiveSupport::HashWithIndifferentAccess.not_new(worked_on: params[:search]["worked_on(1i)"])
-      search_months = ActiveSupport::HashWithIndifferentAccess.not_new(worked_on: params[:search]["worked_on(2i)"])
       @search_year = search_years[:worked_on]
       @search_month = search_months[:worked_on]
       Attendance.where(user_id: @user.id).search(params[:search]["worked_on(1i)"]).search(params[:search]["worked_on(2i)"]).where(change_approval: 3).order(worked_on: "ASC")
@@ -254,7 +232,7 @@ class AttendancesController < ApplicationController
       params.permit(attendances: [:status, :month_approval, :month_check])[:attendances]
     end
     
-     # 残業申請提出
+    # 残業申請提出
     def overtime_work_apply_params
       params.require(:user).permit(attendances: [:overtime_superior_id, :overtime_end_plan, :next_day_check, :overtime_detail,
                                   :overtime_hours, :overtime_approval, :overtime_status, :overtime_check, :overtime_approval ])[:attendances]
@@ -264,5 +242,4 @@ class AttendancesController < ApplicationController
     def confirmation_overtime_work_apply_params
       params.permit(attendances: [:overtime_status, :overtime_check, :overtime_approval])[:attendances]
     end
-    
 end

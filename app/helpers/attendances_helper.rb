@@ -48,7 +48,6 @@ module AttendancesHelper
     item[:change_superior_id].present? && item["started_at(4i)"] == "" && item["started_at(5i)"] == "" && item["finished_at(4i)"] == "" && item["finished_at(5i)"] == ""
   end
   
-    
   # 本日の勤務中社員取得用
   def working_users
     User.where(id: Attendance.where.not(started_at: nil).
@@ -95,14 +94,14 @@ module AttendancesHelper
     superior
   end
   
-    # 1ヶ月勤怠申請が自分にきているか
+  # 1ヶ月勤怠申請が自分にきているか
   def has_month_apply
     User.joins(:attendances).where(attendances: {superior_id: current_user.id}).where(attendances: {status: "申請中"})
   end
   
   # 勤怠申請決裁の変更のチェックが入っているか？
   def apply_confirmed_invalid?(status, check)
-    if (status == "承認" || status == "否認" || status == "なし" )  && check == "1"
+    if (status == "承認" || status == "否認" || status == "なし")  && check == "1"
       confirmed = true
     else
       confirmed = false
@@ -116,15 +115,17 @@ module AttendancesHelper
     when "申請中"
       "申請中だ、少々待ってくれ。"
     when "承認"
-      "から承認済になったぞ、良かったな。"
+      "承認されたぞ、良かったな。"
     when "否認"
-      "から否認されたぞ、何かやったか？"
+      "否認されたぞ。"
+    when "なし"
+      "1ヶ月申請がキャンセルされたぞ。"  
     else
       "申請"
     end
   end
   
-  # 残業申請先の上長の選択されているか？業務処理内容が入力されているか？
+   # 残業申請先の上長の選択されているか？業務処理内容が入力されているか？
   def selected_overtime_superior?
     superior = true
     overtime_work_apply_params.each do |id, item|
@@ -171,7 +172,7 @@ module AttendancesHelper
     @total_time = hour + min / 60.00
   end
   
-  # 残業申請が自分にきているか
+   # 残業申請が自分にきているか
   def has_overtime_apply
     User.joins(:attendances).where(attendances: {overtime_superior_id: current_user.id}).where(attendances: {overtime_status: "申請中"})
   end
@@ -182,12 +183,12 @@ module AttendancesHelper
     when "申請中"
       "に残業申請中だ、少々待ってくれ。"
     when "否認"
-      "から残業否認されたぞ、今はゆっくり休んでくれ。"
+      "から残業否認されたぞ、今回はゆっくり休んでくれ。"
     when "承認"
-      "から残業承認されたぞ、もうひと踏ん張り頑張ろう。"
+      "から残業承認されたぞ、もうひと踏ん張りだ。"
     when "なし"
       "から残業申請がキャンセルされたぞ。"
-    else 
+    else
     end
   end
   
@@ -208,16 +209,16 @@ module AttendancesHelper
     when "申請中"
       "に勤怠編集申請中だ、少々待ってくれ。"
     when "否認"
-      "から勤怠編集否認されたぞ、何か仕出かしたか？"
+      "から勤怠編集否認されたぞ、何かしたか？"
     when "承認"
       "から勤怠編集承認されたぞ、良かったな。"
     when "なし"
-      "から勤怠編集申請がキャンセルされたぞ。"
+      "から勤怠変更申請がキャンセルされたぞ。"
     else
     end
   end
   
-  # 勤怠ログの上長
+   # 勤怠ログの上長
   def change_superior
     User.where(superior: true)
   end

@@ -116,38 +116,46 @@
             <% end %>
             <%= $days_of_the_week[day.worked_on.wday] %>
           </td>
-          <td><%= day.changed_started_at.hour if day.changed_started_at.present? unless day.change_status == "なし" || day.change_status == "申請中" %></td>
-          <td><%= day.changed_started_at.floor_to(15.minutes).strftime("%M") if day.changed_started_at.present? unless day.change_status == "なし" || day.change_status == "申請中" %></td>
+          <td>
+            <%= day.changed_started_at.hour if day.changed_started_at.present? unless day.change_status == "なし" || day.change_status == "申請中" %>
+          </td>
+          <td>
+            <%= day.changed_started_at.floor_to(15.minutes).strftime("%M") if day.changed_started_at.present? unless day.change_status == "なし" || day.change_status == "申請中"%>
+          </td>
           <td>
             <% if btn_text = attendance_attend(day) %>
               <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-block btn-attendance" if current_user?(@user) %>
             <% end %>
           </td>
-          <td><%= day.changed_finished_at.hour if day.changed_finished_at.present? unless day.change_status == "なし" || day.change_status == "申請中" %></td>
-          <td><%= day.changed_finished_at.floor_to(15.minutes).strftime("%M") if day.changed_finished_at.present? unless day.change_status == "なし" || day.change_status == "申請中" %></td>
+          <td>
+            <%= day.changed_finished_at.hour if day.changed_finished_at.present? unless day.change_status == "なし" || day.change_status == "申請中" %>
+          </td>
+          <td>
+            <%= day.changed_finished_at.floor_to(15.minutes).strftime("%M") if day.changed_finished_at.present? unless day.change_status == "なし" || day.change_status == "申請中"%>
+          </td>
           <td>
             <% if btn_text = attendance_leave(day) %>
               <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-block btn-attendance" if current_user?(@user) %>
             <% end %>
           </td>
           <td>
-              <%= str_times = working_times(day.changed_started_at.floor_to(15.minutes), day.changed_finished_at.floor_to(15.minutes), day.change_next_day_check) if day.started_at.present? && day.finished_at.present? unless day.change_status == "なし" || day.change_status == "申請中"  %>
+              <%= str_times = working_times(day.changed_started_at.floor_to(15.minutes), day.changed_finished_at.floor_to(15.minutes), day.change_next_day_check) if day.changed_started_at? && day.changed_finished_at.present? unless day.change_status == "なし" || day.change_status == "申請中" %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
           </td>
           <td>
-             <%= day.note if day.started_at.present? && day.finished_at.present? unless day.change_status == "なし" || day.change_status == "申請中"  %>
-            </td>
-          <td><%= day.overtime_end_plan.strftime("%-H") if day.overtime_end_plan.present?  unless day.overtime_status == "なし" || day.overtime_status == "申請中"  %></td>
-          <td><%= day.overtime_end_plan.floor_to(15.minutes).strftime("%M") if day.overtime_end_plan.present? unless day.overtime_status == "なし" || day.overtime_status == "申請中"  %></td>
+            <%= day.note if day.changed_started_at? && day.changed_finished_at.present? unless day.change_status == "なし" || day.change_status == "申請中" %>
+          </td>
+          <td><%= day.overtime_end_plan.strftime("%-H") if day.overtime_end_plan.present? unless day.overtime_status == "なし" || day.overtime_status == "申請中" %></td>
+          <td><%= day.overtime_end_plan.floor_to(15.minutes).strftime("%M") if day.overtime_end_plan.present? unless day.overtime_status == "なし" || day.overtime_status == "申請中" %></td>
           <td>
-            <%= format("%.2f", day.overtime_hours.to_f.floor_to(0.25)) if day.overtime_end_plan.present?  unless day.overtime_status == "なし" || day.overtime_status == "申請中"  %>
+            <%= format("%.2f", day.overtime_hours.to_f.floor_to(0.25)) if day.overtime_end_plan.present? unless day.overtime_status == "なし" || day.overtime_status == "申請中" %>
             <% @total_overtime_working = @total_overtime_working.to_f + day.overtime_hours.to_f.floor_to(0.25) %>
           </td>
-          <td><%= day.overtime_detail unless day.overtime_status == "なし" || day.overtime_status == "申請中"  %></td>
+          <td><%= day.overtime_detail unless day.overtime_status == "なし" || day.overtime_status == "申請中" %></td>
           <td>
-            <%= day.change_superior_name %><%= change_status_text(day.change_status)  %>
+            <%= day.change_superior_name %><%= change_status_text(day.change_status) %>
             <%= tag.br if day.change_status.present? && day.overtime_status.present? %>
-            <%= day.overtime_superior_name %><%= overtime_status_text(day.overtime_status)  %>
+            <%= day.overtime_superior_name %><%= overtime_status_text(day.overtime_status) %>
           </td>
         </tr>
       <% end %>
